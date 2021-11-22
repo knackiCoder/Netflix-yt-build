@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import * as ROUTES from './constant/routes';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Home, Browse, Signin, Signup }from './pages';
+import { IsUserRedirect, PrivateRoute } from './helpers/routes';
 
-function App() {
+
+export default function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path={ROUTES.SIGN_UP} element={
+        <IsUserRedirect loggedInPath={ROUTES.BROWSE} exact >
+          <Signup />
+          </IsUserRedirect>
+        } />
+        <Route path={ROUTES.SIGN_IN} element={
+          <IsUserRedirect loggedInPath={ROUTES.BROWSE} exact>
+          <Signin />
+          </IsUserRedirect>
+        } />
+        <Route path={ROUTES.HOME} element={
+          <IsUserRedirect loggedInPath={ROUTES.BROWSE} exact>
+            <Home />
+          </IsUserRedirect>
+        } />
+        <Route path={ROUTES.BROWSE} element={
+          <PrivateRoute loggedInPath={ROUTES.SIGN_IN} exact>
+          <Browse />
+          </PrivateRoute>
+        } />
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;
